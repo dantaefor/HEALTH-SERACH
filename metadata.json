@@ -1,0 +1,6 @@
+{
+  "name": "HEALTH SEARCH",
+  "description": "병원 프로젝트 초기 기획 단계에서 유사 사례를 빠르게 검색하고 비교하여 최적의 유사사례 선정을 제공하는 지능형 대시보드입니다.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
