@@ -189,7 +189,7 @@ export default function App() {
                     <path d="M5,15 C45,13 130,5 210,8 C245,9.5 315,18 340,16 C305,12 185,13 125,15 C65,17 18,19 5,15 Z" />
                   </svg>
                   <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-[80px] font-semibold tracking-[-0.025em] leading-[1.07] text-apple-ink pb-2">
-                    Pick your Proj
+                    <span style={{ color: "#f4b000" }} className="inline-block text-[1.12em] font-black pr-1 tracking-tight">“PICK”</span> <span className="text-[0.75em] font-medium text-slate-800">your Proj</span>
                   </h1>
                 </div>
 
@@ -200,35 +200,45 @@ export default function App() {
 
               {/* Core System Description text */}
               <p className="text-slate-600 text-sm max-w-xl leading-relaxed tracking-tight font-medium">
-                본 플랫폼은 실시간 구글 스프레드시트와 연계된 전국 <span className="font-semibold text-apple-ink border-b border-apple-hairline">116개 의료기관 수립 사업 지표</span>를 참조하여, 초기 기획안 사양값을 실시간 점수화 매칭하는 지능형 모의 실행 대시보드입니다.
+                본 플랫폼은 실시간 구글 스프레드시트와 연계된 전국 <span className="font-semibold text-apple-ink border-b border-apple-hairline">116개 의료기관 수립 사업 지표</span>를
+                <br />
+                참조하여, 초기 기획안 사양값을 실시간 점수화 매칭하는 지능형 모의 실행 대시보드입니다.
               </p>
 
               {/* Action Blue CTA button-primary */}
               <div className="pt-2 z-20">
                 <motion.button
-                  whileHover={{ scale: 1.02, backgroundColor: "#0055b3" }}
+                  whileHover={{ scale: 1.05, backgroundColor: "#0055b3" }}
                   whileTap={{ scale: 0.95 }}
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ 
+                    y: {
+                      repeat: Infinity,
+                      duration: 2.2,
+                      ease: "easeInOut"
+                    }
+                  }}
                   onClick={() => setViewStep("choice")}
-                  className="px-8 py-3.5 bg-apple-blue text-white text-sm sm:text-base font-semibold rounded-full shadow-xs transition-all flex items-center justify-center gap-2 hover:shadow-md cursor-pointer border border-apple-blue/10 tracking-tight"
+                  className="px-8 py-3.5 bg-apple-blue text-white text-sm sm:text-base font-semibold rounded-full shadow-md transition-all flex items-center justify-center gap-2 hover:shadow-lg cursor-pointer border border-apple-blue/10 tracking-tight"
                 >
                   <span>유사사례 검색 시작하기</span>
                   <ArrowRight className="w-4 h-4 text-white/90" />
                 </motion.button>
               </div>
 
-              {/* Key system credentials columns */}
-              <div className="pt-8 border-t border-apple-hairline w-full max-w-md grid grid-cols-3 gap-6 text-left select-none text-slate-500 font-sans">
-                <div>
-                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Connected Database</span>
-                  <p className="font-semibold text-[12px] text-apple-ink mt-0.5">116개 전국 사업 지표</p>
+              {/* Key system credentials columns (Centered, aligned, beautifully styled) */}
+              <div className="pt-8 border-t border-apple-hairline w-full max-w-md grid grid-cols-3 gap-4 text-center select-none text-slate-500 font-sans">
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase text-center w-full">Connected Database</span>
+                  <p className="font-semibold text-[11px] text-apple-ink mt-1 lg:mt-1.5 text-center leading-[15px] whitespace-nowrap">116개 전국 사업 지표</p>
                 </div>
-                <div>
-                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Grid Parameters</span>
-                  <p className="font-semibold text-[12px] text-apple-ink mt-0.5">12가지 상세 기획 기전</p>
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase text-center w-full">Grid Parameters</span>
+                  <p className="font-semibold text-[11px] text-apple-ink mt-1 lg:mt-1.5 text-center leading-[15px] whitespace-nowrap">12가지 검색 필터</p>
                 </div>
-                <div>
-                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase">Matching Engine</span>
-                  <p className="font-semibold text-[12px] text-apple-ink mt-0.5">다차원 평방자동 환산</p>
+                <div className="flex flex-col items-center text-center">
+                  <span className="text-[9px] font-semibold text-slate-400 block tracking-wider uppercase text-center w-full">Matching Engine</span>
+                  <p className="font-semibold text-[11px] text-apple-ink mt-1 lg:mt-1.5 text-center leading-[15px] whitespace-nowrap">유사점수 산출 알고리즘 탑재</p>
                 </div>
               </div>
             </motion.div>
@@ -238,111 +248,150 @@ export default function App() {
               initial={{ opacity: 0, scale: 0.97, x: 20 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               transition={{ duration: 0.9, delay: 0.1, ease: "easeOut" }}
-              className="lg:col-span-5 flex justify-center w-full z-15 relative"
+              className="lg:col-span-5 flex justify-center w-full z-15 relative px-4 sm:px-0"
             >
-              {/* Product rest-on-surface card using exact product drop shadow and rounded-lg(18px) */}
-              <div className="bg-white border border-apple-hairline shadow-apple-product rounded-[18px] p-6 sm:p-7 w-full max-w-[380px] space-y-6 relative select-none hover:shadow-2xl transition-all duration-300">
+              {/* Stacked Cards Wrapper around the active fanned desk */}
+              <div className="relative w-full max-w-[380px] select-none">
                 
-                {/* Mac window button indicators */}
-                <div className="flex gap-1.5 absolute top-4 right-5 z-10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
-                  <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+                {/* Background Card 1 (Fanned Out Left - Deepest Layer) */}
+                <div 
+                  className="absolute inset-0 bg-slate-50 border border-slate-200/50 shadow-xs rounded-[18px] p-6 select-none pointer-events-none transition-all duration-500"
+                  style={{ 
+                    transform: "rotate(-12deg) translateX(-55px) translateY(12px) scale(0.96)",
+                    zIndex: 1,
+                    boxShadow: "0 4px 20px -2px rgba(0,0,0,0.04)"
+                  }}
+                >
+                  <div className="w-16 h-3 bg-slate-200/50 rounded-xs mb-3" />
+                  <div className="w-24 h-4 bg-slate-200/30 rounded-xs mb-4" />
+                  <div className="w-full h-1/2 bg-slate-50 border border-slate-100 rounded-lg opacity-40 mb-3" />
+                  <div className="w-full h-1.5 bg-slate-200/30 rounded-xs mb-1.5" />
+                  <div className="w-2/3 h-1.5 bg-slate-200/30 rounded-xs" />
                 </div>
 
-                {/* Sub title / Type labels */}
-                <div className="space-y-1">
-                  <span className="text-[9px] font-semibold text-slate-400 tracking-wider block uppercase">
-                    Simulated Project Case Study
-                  </span>
-                  <h3 className="text-xl sm:text-2xl font-semibold text-apple-ink tracking-tight">
-                    경상남도 서부의료원
-                  </h3>
+                {/* Background Card 2 (Fanned Out Right - Mid Layer) */}
+                <div 
+                  className="absolute inset-0 bg-white border border-slate-200 shadow-sm rounded-[18px] p-6 select-none pointer-events-none transition-all duration-500"
+                  style={{ 
+                    transform: "rotate(10deg) translateX(50px) translateY(8px) scale(0.97)",
+                    zIndex: 2,
+                    boxShadow: "0 8px 30px -4px rgba(0,0,0,0.05)"
+                  }}
+                >
+                  <div className="w-20 h-3 bg-slate-200/60 rounded-xs mb-3" />
+                  <div className="w-28 h-4 bg-slate-200/40 rounded-xs mb-4" />
+                  <div className="w-full h-1/2 bg-slate-50 border border-slate-100 rounded-lg opacity-60 mb-3" />
+                  <div className="w-full h-1.5 bg-slate-200/40 rounded-xs mb-1.5" />
+                  <div className="w-2/3 h-1.5 bg-slate-200/40 rounded-xs" />
                 </div>
 
-                {/* Info and mini MAP */}
-                <div className="grid grid-cols-12 gap-2 pt-1">
-                  <div className="col-span-7 space-y-3 text-xs flex flex-col justify-center">
-                    <div className="space-y-0.5">
-                      <span className="text-[9px] text-slate-400 block font-semibold leading-none">모역 위치</span>
-                      <p className="text-apple-ink font-semibold text-[11px] flex items-center gap-1.5 mt-1">
-                        <MapPin className="w-3.5 h-3.5 text-apple-blue" /> 경상남도 남해권역
-                      </p>
-                    </div>
-                    <div className="space-y-0.5 flex flex-col justify-center">
-                      <span className="text-[9px] text-slate-400 block font-semibold leading-none">핵심 사업</span>
-                      <p className="text-slate-600 font-semibold text-[10px] leading-snug mt-1">
-                        감염병대응 내·외과 5개실 운영
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Symmetrical South Korea Miniature illustration */}
-                  <div className="col-span-5 flex justify-end items-center pr-1">
-                    <div className="relative p-2 bg-apple-parchment border border-apple-border rounded-xl">
-                      <svg viewBox="0 0 100 130" className="w-[66px] h-[88px] opacity-95">
-                        <path d="M48,5 C55,10 58,16 63,20 C66,23 70,26 71,32 C73,36 74,40 72,46 C70,52 74,58 76,64 C78,70 77,76 74,80 C71,84 66,87 60,89 C55,91 51,95 46,98 C41,101 38,105 39,109 C36,110 34,104 32,99 C30,94 26,92 22,88 C18,84 16,79 16,73 C16,67 17,62 15,58 C13,54 12,49 14,43 C16,37 20,33 21,26 C22,19 25,14 29,10 C33,6 39,2 48,5 Z" fill="#e9eff6" stroke="#cdd8e4" strokeWidth="1" strokeLinejoin="round" />
-                        <ellipse cx="32" cy="116" rx="6" ry="3.5" fill="#e9eff6" stroke="#cdd8e4" strokeWidth="1" />
-                        <g transform="translate(56, 84)">
-                          <circle cx="0" cy="0" r="10" fill="#0066cc" className="opacity-25 animate-pulse" />
-                          <circle cx="0" cy="0" r="4" fill="#0066cc" />
-                        </g>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Similarity Score Radial Display */}
-                <div className="border-t border-apple-divider pt-4 flex items-center justify-between gap-4">
-                  <div className="space-y-1">
-                    <span className="text-[9px] font-semibold text-slate-400 block pb-0.5">유사도 환산 결과</span>
-                    <p className="text-xs text-apple-ink font-semibold leading-normal">
-                      매칭점수 <span className="text-apple-blue font-semibold underline decoration-wavy decoration-apple-blue/20">92.8점</span> 도출<br />
-                      <span className="text-[10px] text-slate-400 font-normal">(상위 3순위 유사사례 자동 정합)</span>
-                    </p>
-                  </div>
-
-                  <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
-                    <svg viewBox="0 0 36 36" className="w-14 h-14 transform -rotate-90">
-                      <circle cx="18" cy="18" r="15.915" fill="none" stroke="#f1f5f9" strokeWidth="3.5" />
-                      <circle cx="18" cy="18" r="15.915" fill="none" stroke="#0066cc" strokeWidth="3.5" strokeDasharray="92.8, 100" strokeLinecap="round" />
-                    </svg>
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-[10px] font-mono font-semibold text-apple-ink">
-                      92.8%
-                    </div>
-                  </div>
-                </div>
-
-                {/* Similarity Chart Bars */}
-                <div className="border-t border-apple-divider pt-4 space-y-2.5 font-sans">
-                  <div className="flex justify-between items-center text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
-                    <span>유사도 검증</span>
-                    <span>1위  |  2위  |  3위  |  4위</span>
-                  </div>
+                {/* Main Card (Top-most card, interactive, straight) */}
+                <div 
+                  className="bg-white border border-apple-hairline shadow-apple-product rounded-[18px] p-6 sm:p-7 w-full space-y-6 relative select-none hover:shadow-2xl transition-all duration-300"
+                  style={{ zIndex: 10, position: "relative" }}
+                >
                   
-                  <div className="h-14 flex items-end justify-between px-4 pt-2 bg-apple-parchment rounded-xl border border-apple-border/40">
-                    <div className="flex flex-col items-center w-6">
-                      <div className="w-3 bg-apple-blue rounded-t-xs h-10 shadow-xs" title="1위: 92.8%"></div>
+                  {/* Mac window button indicators */}
+                  <div className="flex gap-1.5 absolute top-4 right-5 z-10">
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-slate-200"></span>
+                  </div>
+
+                  {/* Sub title / Type labels */}
+                  <div className="space-y-1">
+                    <span className="text-[9px] font-semibold text-slate-400 tracking-wider block uppercase">
+                      Simulated Project Case Study
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-apple-ink tracking-tight">
+                      경상남도 서부의료원
+                    </h3>
+                  </div>
+
+                  {/* Info and mini MAP */}
+                  <div className="grid grid-cols-12 gap-2 pt-1">
+                    <div className="col-span-7 space-y-3 text-xs flex flex-col justify-center">
+                      <div className="space-y-0.5">
+                        <span className="text-[9px] text-slate-400 block font-semibold leading-none">모역 위치</span>
+                        <p className="text-apple-ink font-semibold text-[11px] flex items-center gap-1.5 mt-1">
+                          <MapPin className="w-3.5 h-3.5 text-apple-blue" /> 경상남도 남해권역
+                        </p>
+                      </div>
+                      <div className="space-y-0.5 flex flex-col justify-center">
+                        <span className="text-[9px] text-slate-400 block font-semibold leading-none">핵심 사업</span>
+                        <p className="text-slate-600 font-semibold text-[10px] leading-snug mt-1">
+                          감염병대응 내·외과 5개실 운영
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex flex-col items-center w-6">
-                      <div className="w-3 bg-slate-400 rounded-t-xs h-8 shadow-xs" title="2위: 83.1%"></div>
-                    </div>
-                    <div className="flex flex-col items-center w-6">
-                      <div className="w-3 bg-slate-300 rounded-t-xs h-6 shadow-xs" title="3위: 71.4%"></div>
-                    </div>
-                    <div className="flex flex-col items-center w-6">
-                      <div className="w-3 bg-slate-200 rounded-t-xs h-3.5" title="4위: 48.0%"></div>
+
+                    {/* Symmetrical South Korea Miniature illustration */}
+                    <div className="col-span-5 flex justify-end items-center pr-1">
+                      <div className="relative p-2 bg-apple-parchment border border-apple-border rounded-xl">
+                        <svg viewBox="0 0 100 130" className="w-[66px] h-[88px] opacity-95">
+                          <path d="M48,5 C55,10 58,16 63,20 C66,23 70,26 71,32 C73,36 74,40 72,46 C70,52 74,58 76,64 C78,70 77,76 74,80 C71,84 66,87 60,89 C55,91 51,95 46,98 C41,101 38,105 39,109 C36,110 34,104 32,99 C30,94 26,92 22,88 C18,84 16,79 16,73 C16,67 17,62 15,58 C13,54 12,49 14,43 C16,37 20,33 21,26 C22,19 25,14 29,10 C33,6 39,2 48,5 Z" fill="#e9eff6" stroke="#cdd8e4" strokeWidth="1" strokeLinejoin="round" />
+                          <ellipse cx="32" cy="116" rx="6" ry="3.5" fill="#e9eff6" stroke="#cdd8e4" strokeWidth="1" />
+                          <g transform="translate(56, 84)">
+                            <circle cx="0" cy="0" r="10" fill="#0066cc" className="opacity-25 animate-pulse" />
+                            <circle cx="0" cy="0" r="4" fill="#0066cc" />
+                          </g>
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                {/* Medical Metadata Indicators */}
-                <div className="flex items-center justify-between text-[9px] text-slate-450 font-mono font-semibold border-t border-apple-divider pt-3 select-none">
-                  <span className="flex items-center gap-1">🟢 MO (계획 연면적)</span>
-                  <span className="flex items-center gap-1">🔵 2FB (가용 병상)</span>
-                  <span className="flex items-center gap-1 font-mono">🟡 GFD (공사원가)</span>
-                </div>
+                  {/* Similarity Score Radial Display */}
+                  <div className="border-t border-apple-divider pt-4 flex items-center justify-between gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[9px] font-semibold text-slate-400 block pb-0.5">유사도 환산 결과</span>
+                      <p className="text-xs text-apple-ink font-semibold leading-normal">
+                        매칭점수 <span className="text-apple-blue font-semibold underline decoration-wavy decoration-apple-blue/20">92.8점</span> 도출<br />
+                        <span className="text-[10px] text-slate-400 font-normal">(상위 3순위 유사사례 자동 정합)</span>
+                      </p>
+                    </div>
 
+                    <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
+                      <svg viewBox="0 0 36 36" className="w-14 h-14 transform -rotate-90">
+                        <circle cx="18" cy="18" r="15.915" fill="none" stroke="#f1f5f9" strokeWidth="3.5" />
+                        <circle cx="18" cy="18" r="15.915" fill="none" stroke="#0066cc" strokeWidth="3.5" strokeDasharray="92.8, 100" strokeLinecap="round" />
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-[10px] font-mono font-semibold text-apple-ink">
+                        92.8%
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Similarity Chart Bars */}
+                  <div className="border-t border-apple-divider pt-4 space-y-2.5 font-sans">
+                    <div className="flex justify-between items-center text-[9px] text-slate-400 font-semibold uppercase tracking-wider">
+                      <span>유사도 검증</span>
+                      <span>1위  |  2위  |  3위  |  4위</span>
+                    </div>
+                    
+                    <div className="h-14 flex items-end justify-between px-4 pt-2 bg-apple-parchment rounded-xl border border-apple-border/40">
+                      <div className="flex flex-col items-center w-6">
+                        <div className="w-3 bg-apple-blue rounded-t-xs h-10 shadow-xs" title="1위: 92.8%"></div>
+                      </div>
+                      <div className="flex flex-col items-center w-6">
+                        <div className="w-3 bg-slate-400 rounded-t-xs h-8 shadow-xs" title="2위: 83.1%"></div>
+                      </div>
+                      <div className="flex flex-col items-center w-6">
+                        <div className="w-3 bg-slate-300 rounded-t-xs h-6 shadow-xs" title="3위: 71.4%"></div>
+                      </div>
+                      <div className="flex flex-col items-center w-6">
+                        <div className="w-3 bg-slate-200 rounded-t-xs h-3.5" title="4위: 48.0%"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Medical Metadata Indicators */}
+                  <div className="flex items-center justify-between text-[9px] text-slate-450 font-mono font-semibold border-t border-apple-divider pt-3 select-none">
+                    <span className="flex items-center gap-1">🟢 MO (계획 연면적)</span>
+                    <span className="flex items-center gap-1">🔵 2FB (가용 병상)</span>
+                    <span className="flex items-center gap-1 font-mono">🟡 GFD (공사원가)</span>
+                  </div>
+
+                </div>
               </div>
             </motion.div>
 
@@ -377,14 +426,16 @@ export default function App() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center space-y-3 max-w-2xl pb-2"
           >
-            <span className="text-[10px] font-semibold text-apple-blue tracking-wider uppercase bg-apple-blue/10 px-3 py-1 rounded-full">
+            <span className="text-[10px] font-semibold text-apple-blue tracking-wider uppercase bg-apple-blue/10 px-3 py-1 rounded-full inline-block mb-4">
               Select Analytical Pathway
             </span>
             <h2 className="text-3xl sm:text-4xl font-semibold text-[#1d1d1f] tracking-tight font-sans leading-tight">
               원하시는 탐색 경로를 지정해주십시오
             </h2>
             <p className="text-slate-550 text-base leading-relaxed font-sans">
-              분석 의도에 따라 신속 기획안 가중치 유사 매칭 방식 혹은 다변수 정량 상세 조건 검색 경로를 유연하게 선택할 수 있습니다.
+              분석 의도에 따라 신속 기획안 가중치 유사 매칭 방식 혹은
+              <br />
+              다변수 정량 상세 조건 검색 경로를 유연하게 선택할 수 있습니다.
             </p>
           </motion.div>
 
@@ -520,7 +571,7 @@ export default function App() {
             의료기관 건립 프로젝트 유사사례 <span className="text-indigo-600 font-black">지능형 탐색 패널</span>
           </h2>
           <p className="text-slate-600 text-[15px] mt-4 leading-relaxed max-w-3xl font-medium">
-            전국 116개 주요 의료기관 건립 사례의 계획 설계안, 입면 외벽마감, 병상 규모, 평당 공사단가 및 지리적 입지 좌표 구조를 입체적으로 질의하고 필터링하는 지능형 GIS 의사결정 프레임워크입니다.
+            전국 116개 주요 의료기관 <span className="font-extrabold text-[#aa2d00] bg-rose-50/80 px-1.5 py-0.5 rounded-md">설계사 "A사" 사례 클릭 시, 다른 차트와 상호 연동 필터 적용</span> 평당 공사단가 및 지리적 입지 좌표 구조를 입체적으로 질의하고 필터링하는 지능형 GIS 의사결정 프레임워크입니다.
           </p>
         </div>
 

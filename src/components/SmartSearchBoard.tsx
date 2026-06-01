@@ -139,7 +139,7 @@ export default function SmartSearchBoard({
       .slice(0, 5);
   }, [firstSearchDone, searchResults, cases]);
 
-  // 3. 외벽 주요 외장 마감재 톱 4 선호도
+  // 3. 외벽 주요 외장 마감재 선호도 (Slice 제거 및 전 요소 동적 렌더링)
   const m2CladdingData = useMemo(() => {
     const base = firstSearchDone ? searchResults : cases;
     if (!base || base.length === 0) return [];
@@ -152,8 +152,7 @@ export default function SmartSearchBoard({
     });
     return Object.entries(countMap)
       .map(([name, value]) => ({ name, value }))
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 4);
+      .sort((a, b) => b.value - a.value);
   }, [firstSearchDone, searchResults, cases]);
 
   // Custom Weight Sliders Toggle (Mode 1)
@@ -1480,14 +1479,14 @@ export default function SmartSearchBoard({
                   <span className="text-[10px] font-bold text-indigo-500 bg-indigo-50 px-2.5 py-1 rounded-full">의료시설 주요 용도</span>
                   {m2Category !== "전체" && (
                     <button 
-                      onClick={() => setM2Category("전체")}
+                       onClick={() => setM2Category("전체")}
                       className="text-[10px] text-slate-450 hover:text-slate-650 cursor-pointer font-bold"
                     >
                       필터 해제
                     </button>
                   )}
                 </div>
-                <div className="h-36 mt-2">
+                <div className="h-44 mt-2 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={m2CategoryData} layout="vertical" margin={{ top: 5, right: 35, left: 10, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -1498,7 +1497,7 @@ export default function SmartSearchBoard({
                         {m2CategoryData.map((entry, index) => {
                           const isSelected = m2Category === entry.name;
                           const isMax = index === 0;
-                          let fill = isMax ? "#4f46e5" : "#64748b";
+                          let fill = isMax ? "#4f46e5" : "#0ea5e9";
                           const opacity = (m2Category !== "전체") ? (isSelected ? 1.0 : 0.35) : 1.0;
                           return <Cell key={`cell-cat-${index}`} fill={fill} fillOpacity={opacity} onClick={() => handleCategoryClick(entry)} />;
                         })}
@@ -1522,7 +1521,7 @@ export default function SmartSearchBoard({
                     </button>
                   )}
                 </div>
-                <div className="h-36 mt-2">
+                <div className="h-44 mt-2 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart data={m2CladdingData} layout="vertical" margin={{ top: 5, right: 35, left: 10, bottom: 5 }}>
                       <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -1533,7 +1532,7 @@ export default function SmartSearchBoard({
                         {m2CladdingData.map((entry, index) => {
                           const isSelected = m2Cladding === entry.name;
                           const isMax = index === 0;
-                          let fill = isMax ? "#4f46e5" : "#64748b";
+                          let fill = isMax ? "#4f46e5" : "#0ea5e9";
                           const opacity = (m2Cladding !== "") ? (isSelected ? 1.0 : 0.35) : 1.0;
                           return <Cell key={`cell-clad-${index}`} fill={fill} fillOpacity={opacity} onClick={() => handleCladdingClick(entry)} />;
                         })}

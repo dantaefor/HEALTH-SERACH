@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { CaseRecord } from "../types";
+import { useFilters } from "../context/FilterContext";
 import {
   ScatterChart,
   Scatter,
@@ -20,7 +21,7 @@ import {
   Cell,
   Legend
 } from "recharts";
-import { BarChart3, LineChart as LineIcon, Activity, Sliders } from "lucide-react";
+import { BarChart3, LineChart as LineIcon, Activity, Sliders, X } from "lucide-react";
 
 interface ChartsViewProps {
   cases: CaseRecord[];
@@ -28,81 +29,97 @@ interface ChartsViewProps {
 
 export default function ChartsView({ cases }: ChartsViewProps) {
   const [activeTab, setActiveTab] = useState<"scatter" | "trend" | "regional" | "category">("scatter");
+  const { selectedCompany, setSelectedCompany, clearFilters } = useFilters();
+
+  // Filter cases by selectedCompany globally if selectedCompany exists
+  const filteredCases = useMemo(() => {
+    if (!selectedCompany) return cases;
+    const cleanFilter = selectedCompany.replace(/사$/, "").trim().toUpperCase();
+    return cases.filter(c => (c.designer || "").trim().toUpperCase() === cleanFilter);
+  }, [cases, selectedCompany]);
 
   // 1. Data Prep: Scatter Plot (GFA vs Bed Count)
-  const scatterData = cases
-    .filter(c => c.beds > 0 && c.gfa > 0)
-    .map(c => ({
-      name: c.projectName,
-      beds: c.beds,
-      gfa: Math.round(c.gfa),
-      cost: c.constructionCost || 0,
-      category: c.category,
-      perPyung: c.perPyungCost
-    }));
+  const scatterData = useMemo(() => {
+    return filteredCases
+      .filter(c => c.beds > 0 && c.gfa > 0)
+      .map(c => ({
+        name: c.projectName,
+        beds: c.beds,
+        gfa: Math.round(c.gfa),
+        cost: c.constructionCost || 0,
+        category: c.category,
+        perPyung: c.perPyungCost
+      }));
+  }, [filteredCases]);
 
   // 2. Data Prep: Trend Line (Avg Cost per Pyung over Design Year)
-  const yearsGrouped: Record<number, { sumCost: number; sumPyung: number; count: number }> = {};
-  cases.forEach(c => {
-    if (!c.designYear || c.designYear < 2000) return;
-    if (!yearsGrouped[c.designYear]) {
-      yearsGrouped[c.designYear] = { sumCost: 0, sumPyung: 0, count: 0 };
-    }
-    if (c.perPyungCost > 0) {
-      yearsGrouped[c.designYear].sumPyung += c.perPyungCost;
-      yearsGrouped[c.designYear].sumCost += c.constructionCost;
-      yearsGrouped[c.designYear].count += 1;
-    }
-  });
+  const trendData = useMemo(() => {
+    const yearsGrouped: Record<number, { sumCost: number; sumPyung: number; count: number }> = {};
+    filteredCases.forEach(c => {
+      if (!c.designYear || c.designYear < 2000) return;
+      if (!yearsGrouped[c.designYear]) {
+        yearsGrouped[c.designYear] = { sumCost: 0, sumPyung: 0, count: 0 };
+      }
+      if (c.perPyungCost > 0) {
+        yearsGrouped[c.designYear].sumPyung += c.perPyungCost;
+        yearsGrouped[c.designYear].sumCost += c.constructionCost;
+        yearsGrouped[c.designYear].count += 1;
+      }
+    });
 
-  const trendData = Object.entries(yearsGrouped)
-    .map(([year, info]) => ({
-      year: parseInt(year),
-      avgPerPyung: info.count > 0 ? parseFloat((info.sumPyung / info.count).toFixed(2)) : 0,
-      avgCost: info.count > 0 ? parseFloat((info.sumCost / info.count).toFixed(1)) : 0
-    }))
-    .sort((a, b) => a.year - b.year);
+    return Object.entries(yearsGrouped)
+      .map(([year, info]) => ({
+        year: parseInt(year),
+        avgPerPyung: info.count > 0 ? parseFloat((info.sumPyung / info.count).toFixed(2)) : 0,
+        avgCost: info.count > 0 ? parseFloat((info.sumCost / info.count).toFixed(1)) : 0
+      }))
+      .sort((a, b) => a.year - b.year);
+  }, [filteredCases]);
 
   // 3. Data Prep: Regional bar chart (Grouped by major metropolitan boundary)
-  const regionGroup: Record<string, number> = {};
-  cases.forEach(c => {
-    let simpleLoc = "전국";
-    if (c.location.includes("서울")) simpleLoc = "서울";
-    else if (c.location.includes("경기") || c.location.includes("인천")) simpleLoc = "경기/인천";
-    else if (c.location.includes("대구") || c.location.includes("경북") || c.location.includes("경남") || c.location.includes("부산") || c.location.includes("울산")) simpleLoc = "영남권 (대구/부산/경남)";
-    else if (c.location.includes("전남") || c.location.includes("전북") || c.location.includes("광주")) simpleLoc = "호남권 (광주/전라)";
-    else if (c.location.includes("충남") || c.location.includes("충북") || c.location.includes("대전") || c.location.includes("세종")) simpleLoc = "충청권 (대전/충청)";
-    else if (c.location.includes("제주")) simpleLoc = "제주권";
-    else if (c.location.includes("강원")) simpleLoc = "강원권";
+  const regionalData = useMemo(() => {
+    const regionGroup: Record<string, number> = {};
+    filteredCases.forEach(c => {
+      let simpleLoc = "전국";
+      if (c.location.includes("서울")) simpleLoc = "서울";
+      else if (c.location.includes("경기") || c.location.includes("인천")) simpleLoc = "경기/인천";
+      else if (c.location.includes("대구") || c.location.includes("경북") || c.location.includes("경남") || c.location.includes("부산") || c.location.includes("울산")) simpleLoc = "영남권 (대구/부산/경남)";
+      else if (c.location.includes("전남") || c.location.includes("전북") || c.location.includes("광주")) simpleLoc = "호남권 (광주/전라)";
+      else if (c.location.includes("충남") || c.location.includes("충북") || c.location.includes("대전") || c.location.includes("세종")) simpleLoc = "충청권 (대전/충청)";
+      else if (c.location.includes("제주")) simpleLoc = "제주권";
+      else if (c.location.includes("강원")) simpleLoc = "강원권";
 
-    regionGroup[simpleLoc] = (regionGroup[simpleLoc] || 0) + 1;
-  });
+      regionGroup[simpleLoc] = (regionGroup[simpleLoc] || 0) + 1;
+    });
 
-  const regionalData = Object.entries(regionGroup)
-    .map(([region, count]) => ({ region, count }))
-    .sort((a, b) => b.count - a.count);
+    return Object.entries(regionGroup)
+      .map(([region, count]) => ({ region, count }))
+      .sort((a, b) => b.count - a.count);
+  }, [filteredCases]);
 
   // 4. Data Prep: Use-Case Category analysis chart
-  const categoryGroup: Record<string, { count: number; sumPyung: number; validPyungCount: number }> = {};
-  cases.forEach(c => {
-    const cat = c.category || "기타의료";
-    if (!categoryGroup[cat]) {
-      categoryGroup[cat] = { count: 0, sumPyung: 0, validPyungCount: 0 };
-    }
-    categoryGroup[cat].count += 1;
-    if (c.perPyungCost > 0) {
-      categoryGroup[cat].sumPyung += c.perPyungCost;
-      categoryGroup[cat].validPyungCount += 1;
-    }
-  });
+  const categoryChartData = useMemo(() => {
+    const categoryGroup: Record<string, { count: number; sumPyung: number; validPyungCount: number }> = {};
+    filteredCases.forEach(c => {
+      const cat = c.category || "기타의료";
+      if (!categoryGroup[cat]) {
+        categoryGroup[cat] = { count: 0, sumPyung: 0, validPyungCount: 0 };
+      }
+      categoryGroup[cat].count += 1;
+      if (c.perPyungCost > 0) {
+        categoryGroup[cat].sumPyung += c.perPyungCost;
+        categoryGroup[cat].validPyungCount += 1;
+      }
+    });
 
-  const categoryChartData = Object.entries(categoryGroup)
-    .map(([category, info]) => ({
-      category,
-      count: info.count,
-      avgPerPyung: info.validPyungCount > 0 ? parseFloat((info.sumPyung / info.validPyungCount).toFixed(1)) : 0
-    }))
-    .sort((a, b) => b.count - a.count);
+    return Object.entries(categoryGroup)
+      .map(([category, info]) => ({
+        category,
+        count: info.count,
+        avgPerPyung: info.validPyungCount > 0 ? parseFloat((info.sumPyung / info.validPyungCount).toFixed(1)) : 0
+      }))
+      .sort((a, b) => b.count - a.count);
+  }, [filteredCases]);
 
   // Custom tooltips (highly polished)
   const CustomScatterTooltip = ({ active, payload }: any) => {
@@ -154,6 +171,22 @@ export default function ChartsView({ cases }: ChartsViewProps) {
 
   return (
     <div className="bg-white border border-slate-100 rounded-3xl p-5 h-[520px] flex flex-col select-none shadow-[0_2px_10px_-3px_rgba(6,81,237,0.1)]">
+      {selectedCompany && (
+        <div className="bg-indigo-50/50 border border-indigo-100 rounded-2xl p-3 mb-4 flex items-center justify-between text-xs text-indigo-950 animate-fadeIn shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="bg-indigo-600 text-white font-bold py-0.5 px-2 rounded-lg text-[10px]">
+              필터 활성화
+            </span>
+            <span>선택된 설계사: <strong>{selectedCompany}사</strong> 실적 필터링 중 (총 {filteredCases.length}개 사례 자동 연동)</span>
+          </div>
+          <button 
+            onClick={clearFilters}
+            className="flex items-center gap-1.5 text-[11px] font-bold text-rose-600 hover:text-rose-800 transition-colors cursor-pointer border border-rose-200/50 hover:bg-rose-50 px-2.5 py-1 rounded-lg"
+          >
+            필터 해제 <X className="w-3 h-3" />
+          </button>
+        </div>
+      )}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
         <div>
           <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
